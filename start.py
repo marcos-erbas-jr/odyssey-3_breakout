@@ -18,9 +18,10 @@ x = 25
 xs = x
 ys = 35
 
-colors = [(230, 220, 70), (0,200,50), (0,30,250)]
 playerx = (535/2) - 20
 playery = 270
+life = 3
+lifecoord = [(460,20), (480,20),(500,20)]
 
 ballx = (535/2) + 1
 bally = 259
@@ -56,6 +57,8 @@ while running:
     background()
     scoretext1 = myfont.render("Score: {0}".format(score), 0, (255, 255, 255))
     screen.blit(scoretext1, (25, 15))
+    lifetext = myfont.render("Lives:", 0, (255, 255, 255))
+    screen.blit(lifetext, (400, 15))
 
 
     for blocks3 in linhas:
@@ -66,6 +69,11 @@ while running:
 
     #ball
     pygame.draw.rect(screen, (255,0,0),(ballx, bally, 10, 10))
+
+    #life
+    for lives in lifecoord:
+        pygame.draw.rect(screen, (255, 0, 0), (lives[0], lives[1], 10, 10))
+
 
     #captura de teclas
     keys = pygame.key.get_pressed()
@@ -99,6 +107,8 @@ while running:
             incrementoy *= -1
             incrementox *= -1
             score += 1
+            velocid -= 0.02
+            print(velocid)
 
     if (playerx < x_comparat + 10 and x_comparat < playerx + 50 and playery <
     y_comparat + 10):
@@ -110,7 +120,23 @@ while running:
         playery = 270
         ballx = (535 / 2) + 1
         bally = 260
-        time.sleep(4)
+        time.sleep(2)
+        life -= 1
+        if life >= 0:
+            lifecoord.remove(lifecoord[life])
+
+
+
+
+    if life < 0 :
+        font = pygame.font.SysFont("monospace", 50, bold=pygame.font.Font.bold)
+        lifetext = font.render("GAME OVER", 0, (255, 255, 255))
+        screen.blit(lifetext, (135, 150))
+
+        pygame.display.flip()
+        pygame.time.Clock().tick(60)
+        time.sleep(5)
+        running = False
 
     pygame.display.flip()
     pygame.time.Clock().tick(60)
